@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/gefro/AndroidStudioProjects/TelePhoto/app/src/main/res/drawable/bottom_menu_background.xml" value="0.1075" />
+        <entry key="..\:/Users/gefro/AndroidStudioProjects/TelePhoto/app/src/main/res/drawable/dialog_bg.xml" value="0.267" />
+        <entry key="..\:/Users/gefro/AndroidStudioProjects/TelePhoto/app/src/main/res/drawable/ic_add_circle_outline_24.xml" value="0.2825" />
+        <entry key="..\:/Users/gefro/AndroidStudioProjects/TelePhoto/app/src/main/res/drawable/ic_delete.xml" value="0.2875" />
+        <entry key="..\:/Users/gefro/AndroidStudioProjects/TelePhoto/app/src/main/res/drawable/ic_launcher_custom_background.xml" value="0.2215" />
+        <entry key="..\:/Users/gefro/AndroidStudioProjects/TelePhoto/app/src/main/res/drawable/ic_photo_camera_24.xml" value="0.2345" />
+        <entry key="..\:/Users/gefro/AndroidStudioProjects/TelePhoto/app/src/main/res/drawable/ic_settings_24.xml" value="0.2345" />
+        <entry key="..\:/Users/gefro/AndroidStudioProjects/TelePhoto/app/src/main/res/drawable/selector_for_icon.xml" value="0.1605" />
+        <entry key="..\:/Users/gefro/AndroidStudioProjects/TelePhoto/app/src/main/res/drawable/size_for_menu_bar.xml" value="0.1605" />
+        <entry key="..\:/Users/gefro/AndroidStudioProjects/TelePhoto/app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="..\:/Users/gefro/AndroidStudioProjects/TelePhoto/app/src/main/res/layout/client_item.xml" value="0.4315352697095436" />
+        <entry key="..\:/Users/gefro/AndroidStudioProjects/TelePhoto/app/src/main/res/layout/dialog_for_description.xml" value="0.38697916666666665" />
+        <entry key="..\:/Users/gefro/AndroidStudioProjects/TelePhoto/app/src/main/res/layout/fragment_photo.xml" value="0.38697916666666665" />
+        <entry key="..\:/Users/gefro/AndroidStudioProjects/TelePhoto/app/src/main/res/layout/fragment_settings.xml" value="0.33" />
+        <entry key="..\:/Users/gefro/AndroidStudioProjects/TelePhoto/app/src/main/res/menu/bottom_nav.xml" value="0.38697916666666665" />
+        <entry key="..\:/Users/gefro/AndroidStudioProjects/TelePhoto/app/src/main/res/mipmap-anydpi-v26/ic_launcher_custom.xml" value="0.2205" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>

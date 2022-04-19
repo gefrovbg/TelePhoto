@@ -1,0 +1,8 @@
+<resources>
+    <string name="description">1) Create a telegram bot.\n2) Copy the bot token and paste it in the dialog window.\n3) Open a dialog with the bot and send a message "/add" to add a new user. The application will display a dialog with information about the new user.\n4) Install the phone and connect it to the charger.\n5) Send a message "/photo" in the dialogue with the bot to get a photo.</string>
+    <string name="app_name">TelePhoto</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="insert_token">Insert token!</string>
+    <string name="token">Token</string>
+</resources>
