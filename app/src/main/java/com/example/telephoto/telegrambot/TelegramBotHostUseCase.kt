@@ -1,4 +1,4 @@
-package com.example.telephoto.domain.usecase
+package com.example.telephoto.telegrambot
 
 import com.elbekD.bot.Bot
 import com.example.telephoto.domain.models.Token

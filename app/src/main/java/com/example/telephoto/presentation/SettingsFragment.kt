@@ -11,22 +11,26 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.elbekD.bot.Bot
 import com.example.telephoto.TelegramBotApp
+import com.example.telephoto.data.repository.DataBaseRepositoryImpl
+import com.example.telephoto.data.repository.TokenSharedPreferencesRepositoryImpl
 import com.example.telephoto.databinding.FragmentSettingsBinding
 import com.example.telephoto.domain.models.Token
 import com.example.telephoto.domain.usecase.*
 import com.example.telephoto.presentation.adapters.ClientAdapter
-import java.lang.Exception
+import com.example.telephoto.telegrambot.TelegramBotHostUseCase
+import com.example.telephoto.telegrambot.repository.TelegramBotRepositoryImpl
 
 class SettingsFragment : Fragment() {
 
+    private val tokenSharedPreferencesRepository by lazy { TokenSharedPreferencesRepositoryImpl(contextApp) }
+    private val getTokenFromSharedPreferencesUseCase by lazy { GetTokenFromSharedPreferencesUseCase(tokenSharedPreferencesRepository)}
+    private val saveTokenToSharedPreferencesUseCase by lazy { SaveTokenToSharedPreferencesUseCase(tokenSharedPreferencesRepository)}
     private val telegramBotHostUseCase = TelegramBotHostUseCase()
-    private lateinit var bot: Bot
-    private val getTokenFromSharedPreferencesUseCase = GetTokenFromSharedPreferencesUseCase()
-    private val saveTokenToSharedPreferencesUseCase = SaveTokenToSharedPreferencesUseCase()
-    private val listChatId = TelegramBotApp.listChatId
-    private val adapter = ClientAdapter(listChatId)
     private val contextApp = TelegramBotApp.context
-    private val replyToMessageUseCase = ReplyToMessageUseCase()
+    private val dataBaseRepository by lazy { DataBaseRepositoryImpl(contextApp, null) }
+    private val getAllClientUseCase by lazy { GetAllClientUseCase(dataBaseRepository) }
+    private val telegramBotRepository by lazy { TelegramBotRepositoryImpl() }
+    private lateinit var bot: Bot
 
     private var _binding: FragmentSettingsBinding? = null
     private val binding get() = _binding!!
@@ -45,6 +49,24 @@ class SettingsFragment : Fragment() {
         val warning = binding.warning
         val tokenEditText = binding.tokenEditText
         tokenEditText.doAfterTextChanged { warning.visibility = View.GONE }
+        val allClient = getAllClientUseCase.execute()
+        val adapter = ClientAdapter(allClient)
+
+        val recyclerView = binding.clientRecyclerView
+        recyclerView.adapter = adapter
+        recyclerView.layoutManager = LinearLayoutManager(contextApp)
+        getTokenFromSharedPreferencesUseCase.execute()?.let {
+            if (it.token != ""){
+                bot = telegramBotHostUseCase.execute(it)
+                telegramBotRepository.execute(bot, null, adapter)
+                try {
+                    bot.start()
+                }catch (e: Exception){
+                    Toast.makeText(contextApp, "Check token!", Toast.LENGTH_SHORT).show()
+                    Log.i("Bot", "${e.message}")
+                }
+            }
+        }
 
         binding.btnOk.setOnClickListener {
             if (tokenEditText.text.toString() == ""){
@@ -59,33 +81,13 @@ class SettingsFragment : Fragment() {
                 if(!saveTokenToSharedPreferencesUseCase.execute(token)) Toast.makeText(contextApp, "Sorry, token don`t save!", Toast.LENGTH_SHORT).show()
                 getTokenFromSharedPreferencesUseCase.execute()?.let {
                     bot = telegramBotHostUseCase.execute(it)
-                    replyToMessageUseCase.execute(bot, adapter)
+                    telegramBotRepository.execute(bot, null, adapter)
                     try {
                         bot.start()
                     }catch (e: Exception){
                         Toast.makeText(contextApp, "Check token!", Toast.LENGTH_SHORT).show()
                         Log.i("Bot", "${e.message}")
                     }
-                }
-            }
-        }
-
-        val database = DataBaseHelperUseCase(contextApp, null)
-        val allClient = database.getAll()
-        listChatId.clear()
-        listChatId.addAll(allClient)
-        val recyclerView = binding.clientRecyclerView
-        recyclerView.adapter = adapter
-        recyclerView.layoutManager = LinearLayoutManager(contextApp)
-        getTokenFromSharedPreferencesUseCase.execute()?.let {
-            if (it.token != ""){
-                bot = telegramBotHostUseCase.execute(it)
-                replyToMessageUseCase.execute(bot, adapter)
-                try {
-                    bot.start()
-                }catch (e: Exception){
-                    Toast.makeText(contextApp, "Check token!", Toast.LENGTH_SHORT).show()
-                    Log.i("Bot", "${e.message}")
                 }
             }
         }

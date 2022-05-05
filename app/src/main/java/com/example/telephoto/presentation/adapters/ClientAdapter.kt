@@ -1,18 +1,24 @@
 package com.example.telephoto.presentation.adapters
 
-import android.annotation.SuppressLint
+import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.telephoto.R
 import com.example.telephoto.TelegramBotApp
+import com.example.telephoto.data.repository.DataBaseRepositoryImpl
 import com.example.telephoto.databinding.ClientItemBinding
-import com.example.telephoto.domain.usecase.DataBaseHelperUseCase
-import com.example.telephoto.domain.models.ChatId
+import com.example.telephoto.domain.models.Client
+import com.example.telephoto.domain.usecase.AddClientUseCase
+import com.example.telephoto.domain.usecase.DeleteClientByNicknameUseCase
+import com.example.telephoto.domain.usecase.GetClientByNicknameUseCase
 
-class ClientAdapter (private val listChatId: ArrayList<ChatId>) : RecyclerView.Adapter<ClientAdapter.ViewHolder>() {
-    private val database = DataBaseHelperUseCase(TelegramBotApp.context, null)
+class ClientAdapter (private val listClient: ArrayList<Client>) : RecyclerView.Adapter<ClientAdapter.ViewHolder>() {
+    private val contextApp = TelegramBotApp.context
+    private val dataBaseRepository by lazy { DataBaseRepositoryImpl(contextApp, null) }
+    private val deleteClientByNicknameUseCase by lazy { DeleteClientByNicknameUseCase(dataBaseRepository) }
+    private val addClientUseCase by lazy { AddClientUseCase(dataBaseRepository) }
+    private val getClientByNicknameUseCase by lazy { GetClientByNicknameUseCase(dataBaseRepository) }
 
     inner class ViewHolder(val binding: ClientItemBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -23,51 +29,52 @@ class ClientAdapter (private val listChatId: ArrayList<ChatId>) : RecyclerView.A
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val currentItem = listChatId[position]
+        val currentItem = listClient[position]
         with(holder){
             binding.username.text = "${currentItem.firstName} ${currentItem.lastName}"
             binding.nickname.text = "${currentItem.nickname}"
-            if (currentItem.addStatus){
+            if (currentItem.addStatus == true){
                 binding.imageButton.setImageResource(R.drawable.ic_add_circle_outline_24)
             }
-            binding.imageButton.setOnClickListener(object : View.OnClickListener{
-                @SuppressLint("NotifyDataSetChanged")
-                override fun onClick(v: View?) {
-                    if (currentItem.addStatus){
-                        val newChatId = ChatId(
-                            currentItem.chatId,
-                            currentItem.firstName,
-                            currentItem.lastName,
-                            currentItem.nickname,
-                            addStatus = false
-                        )
-                        listChatId.set(listChatId.indexOf(currentItem), newChatId).also {
-                            if (database.deleteClientByNickname(currentItem.nickname)){
-                                if(database.addClient(newChatId)){
-                                    binding.imageButton.setImageResource(R.drawable.ic_delete)
-                                }
+            binding.imageButton.setOnClickListener {
+                val addStatus = getClientByNicknameUseCase.execute(Client(nickname = currentItem.nickname))?.addStatus
+                if (addStatus == true) {
+                    val newChatId = Client(
+                        currentItem.chatId,
+                        currentItem.firstName,
+                        currentItem.lastName,
+                        currentItem.nickname,
+                        addStatus = false
+                    )
+                    Log.d("keka", listClient.indexOf(currentItem).toString())
+                    listClient.set(listClient.indexOf(currentItem), newChatId).also {
+                        if (deleteClientByNicknameUseCase.execute(currentItem)) {
+                            if (addClientUseCase.execute(newChatId)) {
+                                binding.imageButton.setImageResource(R.drawable.ic_delete)
                             }
                         }
-                    }else deleteItem(listChatId.indexOf(currentItem), currentItem)
-                }
-            })
+                    }
+                } else if (addStatus == false) deleteItem(position, currentItem)
+            }
         }
     }
 
     override fun getItemCount(): Int {
-        return listChatId.size
+        return listClient.size
     }
 
-    fun insertItem(currentItem: ChatId){
-        val index = listChatId.lastIndex + 1
-        listChatId.add(index, currentItem)
-        notifyItemInserted(index)
+    fun insertItem(currentItem: Client){
+        listClient.add(currentItem)
+        notifyItemInserted(listClient.size - 1)
     }
 
 
-    fun deleteItem(index: Int, currentItem: ChatId){
-        listChatId.removeAt(index)
-        if (database.deleteClientByNickname(currentItem.nickname)) notifyItemRemoved(index)
+    fun deleteItem(index: Int, currentItem: Client){
+        if (deleteClientByNicknameUseCase.execute(currentItem)){
+            listClient.removeAt(index)
+            notifyItemRemoved(index)
+            notifyItemRangeChanged(index,listClient.size)
+        }
     }
 
 }

@@ -9,14 +9,18 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.telephoto.R
+import com.example.telephoto.TelegramBotApp
+import com.example.telephoto.data.repository.DescriptionSharedPreferencesRepositoryImpl
 import com.example.telephoto.databinding.ActivityMainBinding
 import com.example.telephoto.domain.usecase.*
 
 class MainActivity : AppCompatActivity() {
 
+    private val contextApp = TelegramBotApp.context
     private lateinit var binding: ActivityMainBinding
     private val showCustomDialogUseCase = ShowCustomDialogUseCase()
-    private val getSharedPreferencesUseCase = GetSharedPreferencesUseCase()
+    private val descriptionSharedPreferencesRepository by lazy { DescriptionSharedPreferencesRepositoryImpl(contextApp) }
+    private val getDescriptionFromSharedPreferencesUseCase by lazy { GetDescriptionFromSharedPreferencesUseCase(descriptionSharedPreferencesRepository) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,7 +32,7 @@ class MainActivity : AppCompatActivity() {
         bottomNavigationView.setupWithNavController(navController)
 
         if (!allPermissionsGranted()) ActivityCompat.requestPermissions(this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS)
-        if (!getSharedPreferencesUseCase.execute().getBoolean("description", false)) {
+        if (!getDescriptionFromSharedPreferencesUseCase.execute()) {
             val view = layoutInflater.inflate(R.layout.dialog_for_description, null)
             val string = R.string.description
             showCustomDialogUseCase.execute(view, string, this)

@@ -82,8 +82,6 @@ dependencies {
     implementation 'androidx.preference:preference-ktx:1.2.0'
 
 
-    implementation "com.github.elbekD:kt-telegram-bot:1.4.1"
-
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2'
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1"
@@ -96,4 +94,9 @@ dependencies {
     implementation "io.reactivex.rxjava3:rxkotlin:3.0.0"
     implementation "io.reactivex.rxjava3:rxandroid:3.0.0"
     implementation "io.reactivex.rxjava3:rxjava:3.0.2"
+
+    implementation "com.github.elbekD:kt-telegram-bot:1.4.1"
+
+    implementation project(path: ':domain')
+    implementation project(path: ':data')
 }
