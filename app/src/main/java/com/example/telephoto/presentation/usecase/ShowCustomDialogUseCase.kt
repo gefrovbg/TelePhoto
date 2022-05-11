@@ -1,4 +1,4 @@
-package com.example.telephoto.presentation
+package com.example.telephoto.presentation.usecase
 
 import android.content.Context
 import android.graphics.Color
