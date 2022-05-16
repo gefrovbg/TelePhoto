@@ -5,8 +5,6 @@ import com.example.telephoto.data.storage.sharedprefs.SharedPreferenceRepository
 import com.example.telephoto.domain.models.Token
 import com.example.telephoto.domain.repository.TokenSharedPreferencesRepository
 
-private const val TOKEN_PREF_NAME = "token"
-
 class TokenSharedPreferencesRepositoryImpl(context: Context): TokenSharedPreferencesRepository {
 
     private val sharedPreferencesRepository = SharedPreferenceRepositoryImpl(context = context)
@@ -33,6 +31,12 @@ class TokenSharedPreferencesRepositoryImpl(context: Context): TokenSharedPrefere
     private fun tokenSharedPrefToDomain(valueReference: String): Token{
 
         return Token(token = valueReference)
+
+    }
+
+    companion object{
+
+        const val TOKEN_PREF_NAME = "token"
 
     }
 }

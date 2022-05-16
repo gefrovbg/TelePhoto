@@ -65,6 +65,7 @@ class ClientAdapter (private val listClient: ArrayList<Client>) : RecyclerView.A
 
     fun insertItem(currentItem: Client){
         listClient.add(currentItem)
+        Log.d("adapter", listClient.toString())
         notifyItemInserted(listClient.size - 1)
     }
 
@@ -72,6 +73,7 @@ class ClientAdapter (private val listClient: ArrayList<Client>) : RecyclerView.A
     fun deleteItem(index: Int, currentItem: Client){
         if (deleteClientByNicknameUseCase.execute(currentItem)){
             listClient.removeAt(index)
+            Log.d("adapter", listClient.toString())
             notifyItemRemoved(index)
             notifyItemRangeChanged(index,listClient.size)
         }

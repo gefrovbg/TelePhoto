@@ -19,9 +19,9 @@ class ShowCustomDialogUseCase {
     private val descriptionSharedPreferencesRepository by lazy { DescriptionSharedPreferencesRepositoryImpl(contextApp) }
     private val saveDescriptionToSharedPreferencesUseCase by lazy { SaveDescriptionToSharedPreferencesUseCase(descriptionSharedPreferencesRepository) }
 
-    fun execute(view: View, textForDialog: Int, context: Context){
+    fun execute(view: View, textForDialog: Int){
 
-        val alertDialog = AlertDialog.Builder(context)
+        val alertDialog = AlertDialog.Builder(view.context)
         val builder = alertDialog
             .create()
         val buttonOk = view.findViewById<Button>(R.id.btn_ok)

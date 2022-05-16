@@ -98,6 +98,14 @@ dependencies {
 
     implementation "com.github.elbekD:kt-telegram-bot:1.4.1"
 
+    //koin
+    def koin_version= "3.2.0"
+    implementation "io.insert-koin:koin-core:$koin_version"
+    testImplementation "io.insert-koin:koin-test:$koin_version"
+    implementation "io.insert-koin:koin-android:$koin_version"
+
     implementation project(path: ':domain')
     implementation project(path: ':data')
+    implementation project(path: ':telegram')
+
 }

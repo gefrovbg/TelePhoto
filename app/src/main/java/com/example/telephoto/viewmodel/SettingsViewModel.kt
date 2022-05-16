@@ -1,70 +1,67 @@
 package com.example.telephoto.viewmodel
 
-import android.util.Log
-import androidx.lifecycle.ViewModel
-import com.elbekD.bot.Bot
+import TelegramBotMessageRepositoryAppImpl.Companion.tukTukClient
+import android.content.SharedPreferences
+import androidx.lifecycle.*
+import com.example.telephoto.data.repository.DescriptionSharedPreferencesRepositoryImpl.Companion.DESC_PREF_NAME
+import com.example.telephoto.data.storage.sharedprefs.SharedPreferencesRepository
+import com.example.telephoto.domain.models.Client
 import com.example.telephoto.domain.models.Token
-import com.example.telephoto.domain.usecase.GetAllClientUseCase
-import com.example.telephoto.domain.usecase.GetTokenFromSharedPreferencesUseCase
-import com.example.telephoto.domain.usecase.SaveTokenToSharedPreferencesUseCase
+import com.example.telephoto.domain.usecase.*
 import com.example.telephoto.presentation.adapters.ClientAdapter
-import com.example.telephoto.telegrambot.TelegramBotHostUseCase
-import com.example.telephoto.telegrambot.repository.TelegramBotRepositoryImpl
 
 class SettingsViewModel(
     private val saveTokenToSharedPreferencesUseCase: SaveTokenToSharedPreferencesUseCase,
     private val getTokenFromSharedPreferencesUseCase: GetTokenFromSharedPreferencesUseCase,
-    private val getAllClientUseCase: GetAllClientUseCase,
-    private val telegramBotHostUseCase: TelegramBotHostUseCase,
-    private val telegramBotRepository: TelegramBotRepositoryImpl
+    getAllClientUseCase: GetAllClientUseCase,
+    getDescriptionFromSharedPreferencesUseCase: GetDescriptionFromSharedPreferencesUseCase,
+    private val sharedPreferencesRepository: SharedPreferencesRepository,
+    lifecycleOwner: LifecycleOwner,
+    private val telegramBotUseCase: TelegramBotUseCase
 
 ): ViewModel() {
 
-    private lateinit var bot: Bot
-
     private val allClient = getAllClientUseCase.execute()
     val adapter = ClientAdapter(allClient)
-    val tokenString = getTokenFromSharedPreferencesUseCase.execute()?.token?: "Insert Token!"
+    val tokenString = MutableLiveData<String>()
+    private val booleanDescription = MutableLiveData<Boolean>()
+    val showDescriptionBoolean: LiveData<Boolean> = booleanDescription
+
+    private val listener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
+        when(key){
+            DESC_PREF_NAME -> booleanDescription.value = getDescriptionFromSharedPreferencesUseCase.execute()
+        }
+    }
 
     init {
-        getTokenFromSharedPreferencesUseCase.execute()?.let {
-            if (it.token != ""){
-                bot = telegramBotHostUseCase.execute(it)
-                telegramBotRepository.execute(bot, null, adapter)
-                try {
-                    bot.start()
-                }catch (e: Exception){
-                    Log.i("Bot", "${e.message}")
-                }
-            }
+        tokenString.value = getTokenFromSharedPreferencesUseCase.execute()?.token?: "Insert Token!"
+        booleanDescription.value = getDescriptionFromSharedPreferencesUseCase.execute()
+        sharedPreferencesRepository.getSharedSharedPreferences().registerOnSharedPreferenceChangeListener(listener)
+        tukTukClient.observe(lifecycleOwner) {
+            adapter.insertItem(
+                Client(
+                    it.chatId,
+                    it.firstName,
+                    it.lastName,
+                    it.nickname,
+                    it.addStatus
+                )
+            )
         }
     }
 
     fun saveToken(token: String){
+        tokenString.value = token
         val tokenToSave = Token(token)
-        try {
-            bot.stop()
-        }catch (e: Exception){
-            Log.i("Bot", "${e.message}")
-        }
         saveTokenToSharedPreferencesUseCase.execute(tokenToSave)
-        getTokenFromSharedPreferencesUseCase.execute()?.let {
-            bot = telegramBotHostUseCase.execute(it)
-            telegramBotRepository.execute(bot, null, adapter)
-            try {
-                bot.start()
-            }catch (e: Exception){
-                Log.i("Bot", "${e.message}")
-            }
-        }
+        telegramBotUseCase.stop()
+        telegramBotUseCase.start()
     }
+
 
     override fun onCleared() {
         super.onCleared()
-        getTokenFromSharedPreferencesUseCase.execute()?.let {
-            if (it.token != "") {
-                bot.stop()
-            }
-        }
+        sharedPreferencesRepository.getSharedSharedPreferences().unregisterOnSharedPreferenceChangeListener(listener)
     }
+
 }

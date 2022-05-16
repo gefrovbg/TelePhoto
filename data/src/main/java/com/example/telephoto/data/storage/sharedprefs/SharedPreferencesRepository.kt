@@ -1,6 +1,10 @@
 package com.example.telephoto.data.storage.sharedprefs
 
+import android.content.SharedPreferences
+
 interface SharedPreferencesRepository {
+
+    fun getSharedSharedPreferences(): SharedPreferences
 
     fun getBooleanFromSharedPreferences(nameReference: String): Boolean
 
