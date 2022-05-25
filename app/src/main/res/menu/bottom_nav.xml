@@ -4,11 +4,11 @@
     <item
         android:iconTint="@color/colorObjectBlue"
         android:id="@+id/photoFragment"
-        android:icon="@drawable/ic_photo_camera_24"
+        android:icon="@drawable/anim_photo"
         android:title="" />
     <item
         android:iconTint="@color/colorObjectBlue"
         android:id="@+id/settingsFragment"
-        android:icon="@drawable/ic_settings_24"
+        android:icon="@drawable/anim_settings"
         android:title="" />
 </menu>

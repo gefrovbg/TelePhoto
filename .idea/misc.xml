@@ -3,6 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/gefro/AndroidStudioProjects/TelePhoto/app/src/main/res/drawable-v24/avd_anim_photo.xml" value="0.1" />
+        <entry key="..\:/Users/gefro/AndroidStudioProjects/TelePhoto/app/src/main/res/drawable-v24/avd_anim_settings.xml" value="0.1" />
+        <entry key="..\:/Users/gefro/AndroidStudioProjects/TelePhoto/app/src/main/res/drawable/anim_settings.xml" value="0.1" />
         <entry key="..\:/Users/gefro/AndroidStudioProjects/TelePhoto/app/src/main/res/drawable/bottom_menu_background.xml" value="0.1075" />
         <entry key="..\:/Users/gefro/AndroidStudioProjects/TelePhoto/app/src/main/res/drawable/dialog_bg.xml" value="0.267" />
         <entry key="..\:/Users/gefro/AndroidStudioProjects/TelePhoto/app/src/main/res/drawable/ic_add_circle_outline_24.xml" value="0.2825" />
@@ -17,8 +20,9 @@
         <entry key="..\:/Users/gefro/AndroidStudioProjects/TelePhoto/app/src/main/res/layout/dialog_for_description.xml" value="0.38697916666666665" />
         <entry key="..\:/Users/gefro/AndroidStudioProjects/TelePhoto/app/src/main/res/layout/fragment_photo.xml" value="0.38697916666666665" />
         <entry key="..\:/Users/gefro/AndroidStudioProjects/TelePhoto/app/src/main/res/layout/fragment_settings.xml" value="0.1" />
-        <entry key="..\:/Users/gefro/AndroidStudioProjects/TelePhoto/app/src/main/res/menu/bottom_nav.xml" value="0.38697916666666665" />
+        <entry key="..\:/Users/gefro/AndroidStudioProjects/TelePhoto/app/src/main/res/menu/bottom_nav.xml" value="0.1" />
         <entry key="..\:/Users/gefro/AndroidStudioProjects/TelePhoto/app/src/main/res/mipmap-anydpi-v26/ic_launcher_custom.xml" value="0.2205" />
+        <entry key="..\:/Users/gefro/AppData/Local/Temp/drawable-temp/fake_of_anim_photo.xml" value="0.1" />
       </map>
     </option>
   </component>
